@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="parent">
+        <div class="header">Dashboard</div>
+        <div class="body">
+            <button class="switch" id="D0" onclick="switch_button('D0');">
+                LED
+            <h5 id="D0_status">OFF</h5>
+            </button>
+            <button class="switch" id="D1" onclick="switch_button('D1');">
+                FAN
+                <h5 id="D1_status">OFF</h5>
+            </button>
+            <button class="switch" id="D2" onclick="switch_button('D2');">
+                LIGHT
+                <h5 id="D2_status">OFF</h5>
+            </button>
+        </div>
+        <div class="footer">Designed & Developed by Tushar & Ashutosh</div>
+    </div>
+</body>
+</html>
