@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <scrip src="{{ url_for('static', filename='js/script.js') }}"></scrip>
+    <title>MQTT_APIs</title>
+</head>
+<body>
+    
+    <div class="parent">
+        <div class="header">Live MQTT-Flask Project </div>
+        <div class="body">
+            <p>
+                This is a open source IOT project that use MQTT protocol for interaction of hardware with api services. <br><br>
+                Microcontroller Used: <u>NodeMCU ESP8266</u> <br>
+                Api Framework: <u>Python-Flask</u> <br>
+
+            </p>
+            <br><br><br><br>
+            <a href="{{ url_for('dashboard')}}">Go to Dashboard --></a>
+        </div>
+        <div class="footer">Designed & Developed by <u> Tushar Mukharji & Ashutosh Dixit</u> <br>Email: <u>ecetushar22@gmail.com</u></div>
+    </div>
+
+    
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_mqtt import Mqtt
 from datetime import datetime
 import models
@@ -32,7 +32,11 @@ def handle_mqtt_message(client, userdata, message):
 
 @apis.route("/")
 def home():
-    return "API server is running.."
+    return render_template("home.html")
+
+@apis.route("/dashboard/")
+def dashboard():
+    return render_template("dashboard.html")
 
 # to control a button
 @apis.route('/publish/',methods=["PUT"])
