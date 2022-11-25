@@ -22,7 +22,7 @@ async function switch_button(button_id){
 
 async function call_api(pin,status){
     const data = {"pin":pin, "state":status}
-    const url = "https://tmissacnewton.pythonanywhere.com/publish/"
+    const url = "https://localhost:5000/publish/"
 
     const response = await fetch(url, {
         method: 'PUT',
