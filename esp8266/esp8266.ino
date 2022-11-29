@@ -3,23 +3,29 @@
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+
 // WiFi
 const char *ssid = "Net_2.4G";           // Enter your WiFi name
 const char *password = "Nopassword@163"; // Enter WiFi password
 
 // MQTT Broker
-const char *mqtt_broker = "91.121.93.94"; // test.mosquitto.org
+const char *mqtt_broker = "test.mosquitto.org"; // test.mosquitto.org
 const char *topic = "xx342/control";
 const int mqtt_port = 1883;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+uint8_t mqtt_led = D4;
+
 void setup()
 {
     pinMode(D0, OUTPUT);
     pinMode(D1, OUTPUT);
     pinMode(D2, OUTPUT);
+    
+
+    digitalWrite(mqtt_led, HIGH);
 
     // Set software serial baud to 115200;
     Serial.begin(115200);
@@ -46,13 +52,10 @@ void setup()
     while (!client.connected())
     {
         String client_id = "esp8266-client-";
-        client_id += String(WiFi.macAddress());
+        client_id += String(ESP.getChipId());
 
-        //Serial.printf("The client %s connects to mosquitto mqtt broker\n", client_id.c_str());
-        digitalWrite(D0,HIGH);
-        delay(300);
-        digitalWrite(D0,LOW);
-        delay(300);
+        Serial.printf("The client %s connects to mosquitto mqtt broker\n", client_id.c_str());
+        
 
         if (client.connect(client_id.c_str()))
         {
@@ -70,6 +73,8 @@ void setup()
     client.publish(topic, "i_am_online");
     client.subscribe(topic);
 }
+
+
 void callback(char *topic, byte *payload, unsigned int length)
 {   
     // Based on the message recieve as "D0-1"
@@ -113,7 +118,67 @@ void pin_call(String pin, String state)
     }
 }
 
-void loop()
-{
-    client.loop();
+
+//function for reconnect to mqtt server
+void mqtt_reconnect(){
+    while (!client.connected())
+    {
+        String client_id = "esp8266-client-";
+        client_id += String(WiFi.macAddress());
+
+        //Serial.printf("The client %s connects to mosquitto mqtt broker\n", client_id.c_str());
+        //digitalWrite(D0,HIGH);
+        //delay(300);
+        //digitalWrite(D0,LOW);
+        //delay(300);
+
+        if (client.connect(client_id.c_str()))
+        {
+            Serial.println("Reconnected to MQTT broker");
+        }
+        else
+        {
+            Serial.print("failed with state ");
+            Serial.print(client.state());
+            delay(1400);
+        }
+    }
+
+    // publish and subscribe
+    client.publish(topic, "i_am_online");
+    client.subscribe(topic);
 }
+
+
+void wifi_reconnect(){
+    WiFi.begin(ssid, password);
+    Serial.println("Reconnecting to WiFi..");
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        digitalWrite(D0,HIGH);
+        delay(300);
+        digitalWrite(D0,LOW);
+        delay(300);
+    }
+
+    Serial.println("Connected to the WiFi network");
+
+}
+
+void loop()
+{   
+    if (WiFi.status() != WL_CONNECTED){
+        ESP.restart();
+    }
+
+    if (!client.connected()){
+        //analogWrite(mqtt_led,0); //it is set to HIGH but is 
+        Serial.println("Mqtt disconnected..");
+        //ESP.restart();
+        mqtt_reconnect();
+    }
+
+    analogWrite(mqtt_led,100);
+    client.loop();
+    
+} 
